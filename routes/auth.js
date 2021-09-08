@@ -2,6 +2,15 @@ const router = require("express").Router()
 const User = require("../models/User.model");
 const bcrypt = require('bcryptjs');
 
+
+function requireLogin(req, res, next) {
+    if(req.session.currentUser) {
+        next();
+    }else {
+        res.redirect("/login");
+    }
+}
+
 router.get("/signup", (req, res) => {
     res.render('auth/signup')
 });
@@ -9,6 +18,12 @@ router.get("/signup", (req, res) => {
 router.get('/login', (req, res) => {
     res.render('auth/login');
 })
+
+router.get("/cat-pic", requireLogin, (req, res) => {
+    res.render("cat-pic")
+  })
+
+  
 
 router.post('/signup', async(req, res) => {
     const {username, password} = req.body;
